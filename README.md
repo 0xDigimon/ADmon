@@ -16,6 +16,5 @@ it's depended on your input but you can do:
 - Start Dc-sync Attack
 
 I used some tools like smbclient, crackmapexec, rpcclient, impacket tools<br>
-I cracked tgt hashes using <strong>rockyou</strong> wordlist and you can change word list in line 218 (:<br> 
 ##### Thanks for Support 
 <img src="https://github.com/0xDigimon/ADmon/blob/main/media/2.png?raw=true"><br>
