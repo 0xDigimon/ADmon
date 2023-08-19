@@ -2,6 +2,7 @@
 Script to do some enumeration to get initial access
 ## Usage <br>
 ```./ADmon.sh -i <ip> [options: -u username -p password -d domain]```<br>
+[YouTube](https://youtu.be/IENlI2H5WHk)<br>
 <img src="https://github.com/0xDigimon/ADmon/blob/main/media/1.png?raw=true"><br>
 
 ### What you can do
