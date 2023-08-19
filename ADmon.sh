@@ -184,8 +184,8 @@ then
     fi
 
 else 
-echo -e "${BOLDRED}Invalid input, Must have IP${END}"
-echo -e "${BOLDGREEN}Usage ./ADmon.sh -i \<ip\> [option] ${END}"
+echo -e "\n${BOLDRED}Invalid input, Must have IP${END}"
+echo -e "${BOLDGREEN}Usage ./ADmon.sh -i <ip> [options: -u username -p password -d domain] ${END}"
 exit 1;
 fi
 
